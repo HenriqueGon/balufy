@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -11,12 +12,25 @@ class Playlist(models.Model):
 
   # image = models.ImageField(upload_to='') // adicionar na pasta que será criada futuramente.
 
+  user = models.ForeignKey(User, on_delete=models.PROTECT)
+
   created_at = models.DateTimeField(auto_now_add=True)
 
   updated_at = models.DateTimeField(auto_now=True)
 
+  def form_valid(self, form):
+      
+    form.instance.user = self.request.user
+
+    return super().form_valid(form)
+
+  def get_queryset(self):
+    self.object_list = Playlist.objects.filter(user=self.request.user)
+    
+    return self.object_list
+
   def __str__(self):
-    return f'{self.name} - {self.description}'
+    return f'{self.name}'
 
 class Author(models.Model):
   name = models.CharField(
@@ -30,7 +44,7 @@ class Author(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
 
   def __str__(self):
-    return f'{self.name} - {self.description}'
+    return f'{self.name}'
 
 class Song(models.Model):
   name = models.CharField(
@@ -40,13 +54,15 @@ class Song(models.Model):
 
   url = models.URLField(max_length=255)
 
+  author = models.ForeignKey(Author, on_delete=models.PROTECT)
+
   created_at = models.DateTimeField(auto_now_add=True)
 
   updated_at = models.DateTimeField(auto_now=True)
 
   def __str__(self):
-    return f'{self.name} - {self.duration}'
+    return f'{self.name}'
 
 class Playlist_Songs(models.Model):
   playlist = models.ForeignKey(Playlist, on_delete=models.PROTECT)
-  author = models.ForeignKey(Author, on_delete=models.PROTECT)
+  song = models.ForeignKey(Song, on_delete=models.PROTECT)

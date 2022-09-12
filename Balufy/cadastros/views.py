@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -49,6 +50,13 @@ class PlaylistUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('listar-playlist')
 
+    def get_object(self, queryset=None):
+        self.object = get_object_or_404(
+            PlaylistUpdate, pk=self.kwargs['pk'], user=self.request.user)
+
+        return self.object
+
+
 
 class AuthorUpdate(LoginRequiredMixin, UpdateView):
     model = Author
@@ -70,6 +78,12 @@ class PlaylistDelete(LoginRequiredMixin, DeleteView):
     model = Playlist
     template_name = 'cadastros/form-delete.html'
     success_url = reverse_lazy('listar-playlist')
+
+    def get_object(self, queryset=None):
+        self.object = get_object_or_404(
+            PlaylistDelete, pk=self.kwargs['pk'], user=self.request.user)
+        return self.object
+
 
 
 class AuthorDelete(LoginRequiredMixin, DeleteView):
