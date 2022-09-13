@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import IndexView, PlaylistCreate, AuthorCreate, SongCreate
+from .views import AuthorList, IndexView, PlaylistCreate, AuthorCreate, PlaylistList, SongCreate, SongList
 from .views import PlaylistUpdate, AuthorUpdate, SongUpdate
 from .views import PlaylistDelete, AuthorDelete, SongDelete
 
@@ -27,4 +27,10 @@ urlpatterns = [
          AuthorDelete.as_view(), name='excluir-autor'),
     path('excluir/musica/<int:pk>/',
          SongDelete.as_view(), name='excluir-musica'),
+
+    path('listar/autor/', AuthorList.as_view(),
+         name='listar-autor'),
+    path('listar/musica/', SongList.as_view(), name='listar-musica'),
+    path('listar/playlist/', PlaylistList.as_view(),
+         name='listar-playlist')
 ]
