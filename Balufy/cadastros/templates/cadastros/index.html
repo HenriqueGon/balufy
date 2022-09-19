@@ -7,8 +7,17 @@
 {% endblock %}
 
 {% block conteudo %}
-<h1 class="mt-4">Olá Templates</h1>
 <p class="lead">
-    Exemplo de texto introdutório.
+    {% for playlist in playlists %}
+    <div class="float-left m-2 p-3 animais-list">
+        <div class="">
+            Nome: {{playlist.name}} <br>
+            Descrição: {{playlist.description}}
+        </div>
+    </div>
+    {% empty %}
+    <span>Nenhum registro encontrado.</span>
+    {% endfor %}
+
 </p>
 {% endblock %}

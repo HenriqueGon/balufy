@@ -1,10 +1,7 @@
-from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
-from dataclasses import field
-from pyexpat import model
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -16,8 +13,18 @@ from braces.views import GroupRequiredMixin
 from .models import Playlist, Author, Song
 
 # Create your views here.
+
+
 class IndexView(TemplateView):
     template_name = 'cadastros/index.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['playlists'] = Playlist.objects.filter(user=self.request.user)
+
+        return context
+
 
 class PlaylistCreate(LoginRequiredMixin, CreateView):
     model = Playlist
@@ -26,12 +33,20 @@ class PlaylistCreate(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('listar-playlist')
     # login_url = reverse_lazy('login')
 
+    def form_valid(self, form):
+
+        form.instance.user = self.request.user
+
+        return super().form_valid(form)
+
+
 class AuthorCreate(GroupRequiredMixin, CreateView):
     model = Author
     fields = ['name', 'description']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('index')
+
 
 class SongCreate(GroupRequiredMixin, CreateView):
     model = Song
@@ -52,10 +67,9 @@ class PlaylistUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         self.object = get_object_or_404(
-            PlaylistUpdate, pk=self.kwargs['pk'], user=self.request.user)
+            Playlist, pk=self.kwargs['pk'], user=self.request.user)
 
         return self.object
-
 
 
 class AuthorUpdate(GroupRequiredMixin, UpdateView):
@@ -83,7 +97,7 @@ class PlaylistDelete(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         self.object = get_object_or_404(
-            PlaylistDelete, pk=self.kwargs['pk'], user=self.request.user)
+            Playlist, pk=self.kwargs['pk'], user=self.request.user)
         return self.object
 
 class AuthorDelete(GroupRequiredMixin, DeleteView):
