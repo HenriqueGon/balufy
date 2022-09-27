@@ -45,7 +45,7 @@ class AuthorCreate(GroupRequiredMixin, CreateView):
     fields = ['name', 'description']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('listar-autor')
 
 
 class SongCreate(GroupRequiredMixin, CreateView):
@@ -53,7 +53,7 @@ class SongCreate(GroupRequiredMixin, CreateView):
     fields = ['name', 'duration', 'url']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('listar-musica')
 
 
 ###################################
@@ -77,7 +77,7 @@ class AuthorUpdate(GroupRequiredMixin, UpdateView):
     fields = ['name', 'description']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('listar-autor')
 
 
 class SongUpdate(GroupRequiredMixin, UpdateView):
@@ -85,7 +85,7 @@ class SongUpdate(GroupRequiredMixin, UpdateView):
     fields = ['name', 'description', 'url']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('listar-musica')
 
 ####################################
 
@@ -104,14 +104,14 @@ class AuthorDelete(GroupRequiredMixin, DeleteView):
     model = Author
     group_required = u"Administrador"
     template_name = 'cadastros/form-delete.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('listar-autor')
 
 
 class SongDelete(GroupRequiredMixin, DeleteView):
     model = Song
     group_required = u"Administrador"
     template_name = 'cadastros/form-delete.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('listar-musica')
 
 
 #################################

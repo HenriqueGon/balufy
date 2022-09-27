@@ -32,33 +32,32 @@
 								<div class="card-body">
 
 									{% if not request.user.is_authenticated %}
+										{% if form.errors %}
+											<div class="alert alert-danger" role="alert">
+												<strong>Atenção!</strong> Usuário não existe ou a senha não confere!
+											</div>
+										{% endif %}
 
-									{% if form.errors %}
-									<div class="alert alert-danger" role="alert">
-										<strong>Atenção!</strong> Usuário não existe ou a senha não confere!
-									</div>
-									{% endif %}
-
-									<form method="post">
-										<!-- Todo formulário tem que ter essa validação -->
-										{% csrf_token %}
-										<!-- Gera o formulário -->
-										{{ form|crispy }}
-										<button type="submit" class="btn btn-primary">
-											Entrar
-										</button>
-									</form>
+										<form method="post">
+											<!-- Todo formulário tem que ter essa validação -->
+											{% csrf_token %}
+											<!-- Gera o formulário -->
+											{{ form|crispy }}
+											<button type="submit" class="btn btn-primary">
+												Entrar
+											</button>
+										</form>
 
 									{% else %}
-									<h5>Você não pode ver essa página!</h5>
+										<h5>Você não pode ver essa página!</h5>
 
-									<p class="lead">Redirecionando você de volta </p>
+										<p class="lead">Redirecionando você de volta </p>
 
-									<div class="spinner-border text-primary" role="status">
-										<span class="sr-only">Loading...</span>
-									</div>
+										<div class="spinner-border text-primary" role="status">
+											<span class="sr-only">Loading...</span>
+										</div>
 
-									<meta http-equiv="refresh" content="4; URL='{% url 'index' %}'" />
+										<meta http-equiv="refresh" content="4; URL='{% url 'index' %}'" />
 									{% endif %}
 
 								</div>
