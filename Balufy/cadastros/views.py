@@ -30,7 +30,7 @@ class PlaylistCreate(LoginRequiredMixin, CreateView):
     model = Playlist
     fields = ['name', 'description']
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('listar-playlist')
+    success_url = reverse_lazy('cadastros/index.html')
     # login_url = reverse_lazy('login')
 
     def form_valid(self, form):
