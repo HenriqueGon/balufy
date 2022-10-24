@@ -15,18 +15,31 @@ from .models import Playlist, Author, Song
 # Create your views here.
 
 
-class IndexView(TemplateView):
-    template_name = 'cadastros/index.html'
-
+class PlaylistContext(object):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
-        context['playlists'] = Playlist.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            context['playlists'] = Playlist.objects.filter(user=self.request.user)
+        else:
+            context['playlists'] = None
 
         return context
 
 
-class PlaylistCreate(LoginRequiredMixin, CreateView):
+
+class IndexView(PlaylistContext, TemplateView):
+    template_name = 'cadastros/index.html'
+
+    # def get_context_data(self, *args, **kwargs):
+        # context = super().get_context_data(*args, **kwargs)
+
+        # context['playlists'] = Playlist.objects.filter(user=self.request.user)
+
+        # return context
+
+
+class PlaylistCreate(LoginRequiredMixin, PlaylistContext, CreateView):
     model = Playlist
     fields = ['name', 'description']
     template_name = 'cadastros/form.html'
