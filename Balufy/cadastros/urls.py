@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from .views import AuthorList, IndexView, PlaylistCreate, AuthorCreate, PlaylistList, SongCreate, SongList
 from .views import PlaylistUpdate, AuthorUpdate, SongUpdate
@@ -31,6 +31,8 @@ urlpatterns = [
     path('listar/autor/', AuthorList.as_view(),
          name='listar-autor'),
     path('listar/musica/', SongList.as_view(), name='listar-musica'),
-    path('listar/playlist/', PlaylistList.as_view(),
-         name='listar-playlist')
+    path('listar/playlist/<int:pk>', PlaylistList.as_view(),
+         name='listar-playlist'),
+
+    path('__debug__/', include('debug_toolbar.urls'))
 ]

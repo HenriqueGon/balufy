@@ -43,7 +43,10 @@
 											{% csrf_token %}
 											<!-- Gera o formulário -->
 											{{ form|crispy }}
-											<button type="submit" class="btn btn-primary">
+											
+											<input type="button" id="showPassword" value="Mostrar senha" />
+										
+											<button type="submit" class="btn btn-primary" style="margin-left: 100px">
 												Entrar
 											</button>
 										</form>
@@ -90,6 +93,25 @@
 	<script src="{% static 'js/popper.min.js' %}"></script>
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'js/scripts.js' %}"></script>
+
+	<script>
+		$(document).ready(function () {
+				$('#showPassword').on('click', function () {
+					const passwordField = $('#id_password');
+
+					var passwordFieldType = passwordField.attr('type');
+
+					if (passwordFieldType == 'password') {
+						passwordField.attr('type', 'text');
+						$(this).val('Esconde senha');
+					} else {
+						passwordField.attr('type', 'password');
+						$(this).val('Mostrar senha');
+					}
+				});
+			});
+
+	</script>
 
 </body>
 

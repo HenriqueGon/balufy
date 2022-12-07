@@ -27,23 +27,22 @@ class PlaylistContext(object):
         return context
 
 
-
 class IndexView(PlaylistContext, TemplateView):
     template_name = 'cadastros/index.html'
 
-    # def get_context_data(self, *args, **kwargs):
-        # context = super().get_context_data(*args, **kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
 
-        # context['playlists'] = Playlist.objects.filter(user=self.request.user)
+        context['songs'] = Song.objects.all()
 
-        # return context
+        return context
 
 
 class PlaylistCreate(LoginRequiredMixin, PlaylistContext, CreateView):
     model = Playlist
     fields = ['name', 'description']
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('cadastros/index.html')
+    # success_url = reverse_lazy('cadastros/form.html')
     # login_url = reverse_lazy('login')
 
     def form_valid(self, form):
@@ -53,7 +52,7 @@ class PlaylistCreate(LoginRequiredMixin, PlaylistContext, CreateView):
         return super().form_valid(form)
 
 
-class AuthorCreate(GroupRequiredMixin, CreateView):
+class AuthorCreate(GroupRequiredMixin, PlaylistContext, CreateView):
     model = Author
     fields = ['name', 'description']
     group_required = u"Administrador"
@@ -61,9 +60,9 @@ class AuthorCreate(GroupRequiredMixin, CreateView):
     success_url = reverse_lazy('listar-autor')
 
 
-class SongCreate(GroupRequiredMixin, CreateView):
+class SongCreate(GroupRequiredMixin, PlaylistContext, CreateView):
     model = Song
-    fields = ['name', 'duration', 'url']
+    fields = ['name', 'duration', 'url', 'author']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('listar-musica')
@@ -72,7 +71,7 @@ class SongCreate(GroupRequiredMixin, CreateView):
 ###################################
 
 
-class PlaylistUpdate(LoginRequiredMixin, UpdateView):
+class PlaylistUpdate(LoginRequiredMixin, PlaylistContext, UpdateView):
     model = Playlist
     fields = ['name', 'description']
     template_name = 'cadastros/form.html'
@@ -85,7 +84,7 @@ class PlaylistUpdate(LoginRequiredMixin, UpdateView):
         return self.object
 
 
-class AuthorUpdate(GroupRequiredMixin, UpdateView):
+class AuthorUpdate(GroupRequiredMixin, PlaylistContext, UpdateView):
     model = Author
     fields = ['name', 'description']
     group_required = u"Administrador"
@@ -93,9 +92,9 @@ class AuthorUpdate(GroupRequiredMixin, UpdateView):
     success_url = reverse_lazy('listar-autor')
 
 
-class SongUpdate(GroupRequiredMixin, UpdateView):
+class SongUpdate(GroupRequiredMixin, PlaylistContext, UpdateView):
     model = Song
-    fields = ['name', 'description', 'url']
+    fields = ['name', 'duration', 'url', 'author']
     group_required = u"Administrador"
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('listar-musica')
@@ -129,17 +128,19 @@ class SongDelete(GroupRequiredMixin, DeleteView):
 
 #################################
 
-class PlaylistList(LoginRequiredMixin, ListView):
+class PlaylistList(LoginRequiredMixin, PlaylistContext, ListView):
     model = Playlist
     template_name = 'listas/playlist.html'
 
     def get_queryset(self):
-        self.object_list = Playlist.objects.filter(user=self.request.user)
+        playlists = Playlist.objects.get(user=self.request.user)
 
+        self.object_list = playlists.songs.all()
+        
         return self.object_list
 
 
-class AuthorList(GroupRequiredMixin, ListView):
+class AuthorList(GroupRequiredMixin, PlaylistContext, ListView):
     model = Author
     group_required = u"Administrador"
     template_name = 'listas/author.html'
@@ -150,7 +151,7 @@ class AuthorList(GroupRequiredMixin, ListView):
     #     return self.object_list
 
 
-class SongList(GroupRequiredMixin, ListView):
+class SongList(GroupRequiredMixin, PlaylistContext, ListView):
     model = Song
     group_required = u"Administrador"
     template_name = 'listas/song.html'

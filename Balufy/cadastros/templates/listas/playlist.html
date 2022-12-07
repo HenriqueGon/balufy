@@ -3,47 +3,156 @@
 {% load static %}
 
 {% block conteudo %}
-<h1 class="mt-4">
-    Lista de Playlists
 
-    <a href="{% url 'cadastrar-playlist' %}" class="btn btn-primary float-right ms-5">
-        Cadastrar Playlist
-    </a>
+<style>
+    .card {
+        margin-right: 10px;
+        width: 250px;
+        height: 300px;
+        background: #232323;
+        border-radius: 20px;
+        overflow: hidden;
+    }
 
-</h1>
+    .card:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #9bdc28;
+        clip-path: circle(150px at 80% 20%);
+        transition: 0.5s ease-in-out;
+    }
 
+    .card:hover:before {
+        clip-path: circle(300px at 80% -20%);
+    }
 
+    .card:after {
+        position: absolute;
+        top: 30%;
+        left: -20%;
+        font-size: 12em;
+        font-weight: 800;
+        font-style: italic;
+        color: rgba(255, 255, 25, 0.05)
+    }
 
-<hr>
+    .card .imgBx {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        width: 100%;
+        height: 220px;
+        transition: 0.5s;
+    }
 
-<table class="table table-striped">
+    .card:hover .imgBx {
+        top: 0%;
+        transform: translateY(0%);
+    }
 
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-        </tr>
-    </thead>
+    .card .contentBx {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100px;
+        text-align: center;
+        transition: 1s;
+        z-index: 10;
+    }
 
-    <tbody>
-        {% for obj in object_list %}
-        <tr>
-            <td>{{ obj.pk }}</td>
-            <td>{{ obj.name }}</td>
-            <td>
-                <a href="{% url 'editar-playlist' obj.pk %}" class="btn btn-warning">
-                    Editar</a>
-                <a href="{% url 'excluir-playlist' obj.pk %}" class="btn btn-danger">
-                    Excluir</a>
-            </td>
-        </tr>
+    .card:hover .contentBx {
+        height: 210px;
+    }
+
+    .card .contentBx h2 {
+        position: relative;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #fff;
+        margin: 0;
+    }
+
+    .card .contentBx .size,
+    .card .contentBx .color {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 20px;
+        transition: 0.5s;
+        opacity: 0;
+        visibility: hidden;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .card:hover .contentBx .size {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0.5s;
+    }
+
+    .card:hover .contentBx .color {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0.6s;
+    }
+
+    .card .contentBx .size h3,
+    .card .contentBx .color h3 {
+        color: #fff;
+        font-weight: 300;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-right: 10px;
+    }
+
+    .card .contentBx a {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #fff;
+        border-radius: 4px;
+        margin-top: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        color: #111;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: 0.5s;
+        margin-top: 0;
+    }
+
+    .card:hover .contentBx a {
+        opacity: 1;
+        transform: translateY(0px);
+        transition-delay: 0.75s;
+    }
+</style>
+
+<p class="lead"></p>
+<div class="col-lg-12">
+    <div class="row">
+        {% for song in object_list %}
+        <div class="card">
+            <div class="contentBx">
+                <h2> {{song.name}} </h2>
+                <div class="size">
+                    <h3>Autor : {{song.author.name}} </h3>
+                </div>
+                <div class="color">
+                    <h3>Duração : {{song.duration}} </h3>
+                </div>
+            </div>
+        </div>
         {% empty %}
-        <tr>
-            <td colspan="100%">Nenhum registro encontado.</td>
-        </tr>
+        <span>Nenhum registro encontrado.</span>
         {% endfor %}
-    </tbody>
-
-</table>
+    </div>
+</div>
 
 {% endblock %}
